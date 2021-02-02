@@ -30,7 +30,7 @@ def sql_drop(con):
 
 
 
-con = sql_connection()
+# con = sql_connection()
 # sql_table(con)
 # # sql_drop(con)
 
