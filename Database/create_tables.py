@@ -1,7 +1,7 @@
 def sql_create_table_history(con):
   cursorObj = con.cursor()
   cursorObj.execute(
-    """CREATE TABLE IF NOT EXISTS hisroty
+    """CREATE TABLE IF NOT EXISTS history
     (
       id integer PRIMARY KEY, 
       amount integer, 

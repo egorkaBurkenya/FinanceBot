@@ -3,6 +3,7 @@ from aiogram import Bot, Dispatcher, executor, types
 import json
 
 import init
+import modules.sqlite3_module as database
 
 
 with open('./configs/config.json', 'r', encoding='utf-8') as fh:
@@ -17,7 +18,8 @@ dp = Dispatcher(bot)
 
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
-  await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram.")
+  balance = database.take_balance()
+  await message.reply(f"Баланс: {str(balance)} руб.")
 
 @dp.message_handler()
 async def echo(message: types.Message):

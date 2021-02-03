@@ -10,31 +10,17 @@ def sql_connection():
   except Error:
     print(Error)
 
-def sql_insert(con, entities):
+def sql_insert(con: sqlite3.connect, 
+              values: tuple, 
+              table="history", 
+              columns="id, amount, amountTitle, type, createdDate, categoryId"):
   cursorObj = con.cursor()
-  cursorObj.execute('INSERT INTO employees(id, name, salary, department, position, hireDate) VALUES(?, ?, ?, ?, ?, ?)', entities)
+  cursorObj.execute(f'INSERT INTO {table}({columns}) VALUES(?, ?, ?, ?, ?, ?)', values)
   con.commit()
 
 
-def sql_fetch(con) -> list:
+def sql_fetch(con, columns="*", table="history") -> list:
   cursorObj = con.cursor()
-  cursorObj.execute('SELECT * FROM employees')
+  cursorObj.execute(f'SELECT {columns} FROM {table}')
   rows = cursorObj.fetchall()
   return unpucking_sqlite_answer(rows)
-
-
-def sql_drop(con):
-  cursorObj = con.cursor()
-  cursorObj.execute('DROP table if exists employees')
-  con.commit()
-
-
-
-# con = sql_connection()
-# sql_table(con)
-# # sql_drop(con)
-
-# # entities = (3, 'Egor', 800, 'IT', 'Tech', '2018-02-06')
-# # sql_insert(con, entities)
-
-# sql_fetch(con)
