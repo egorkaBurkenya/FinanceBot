@@ -20,6 +20,15 @@ dp = Dispatcher(bot)
 async def send_welcome(message: types.Message):
   balance = database.take_balance()
   await message.reply(f"Баланс: {str(balance)} руб.")
+  await message.reply(
+    f"""/start /help - Баланс, список команд с кратким описанием
+/balance - Баланс
+/categories - Выводит список категорий и кол-во записей по каждой категории
+/cat_history имя категории - История категории, или всех категорий 
+Имя_категории "amount + title" - добавляет в указанную категорию amount c описанием
+/history ~ история - Выводит все траты с командой /del_n для удаления 
+    """)
+    
 
 @dp.message_handler()
 async def echo(message: types.Message):
