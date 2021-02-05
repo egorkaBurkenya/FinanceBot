@@ -49,7 +49,9 @@ async def cat_history(message: types.Message):
 
 @dp.message_handler()
 async def echo(message: types.Message):
-  await message.answer(message.text)
+  # print(message.text.split(' ')[0])
+  if message.text.split(' ')[0] in database.take_category_title():   
+    await message.answer(message.text)
 
 if __name__ == '__main__':
   executor.start_polling(dp, skip_updates=True)
