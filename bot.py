@@ -2,7 +2,6 @@ import logging
 from aiogram import Bot, Dispatcher, executor, types
 import json
 
-import init
 import modules.sqlite3_module as database
 
 
@@ -19,8 +18,8 @@ dp = Dispatcher(bot)
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
   balance = database.take_balance()
-  await message.reply(f"Баланс: {str(balance)} руб.")
-  await message.reply(
+  await message.answer(f"Баланс: {str(balance)} руб.")
+  await message.answer(
     f"""/start /help - Баланс, список команд с кратким описанием
 /balance - Баланс
 /categories - Выводит список категорий и кол-во записей по каждой категории
@@ -28,6 +27,16 @@ async def send_welcome(message: types.Message):
 Имя_категории "amount + title" - добавляет в указанную категорию amount c описанием
 /history ~ история - Выводит все траты с командой /del_n для удаления 
     """)
+
+@dp.message_handler(commands=['balance'])
+async def balance(message: types.Message):
+  balance = database.take_balance()
+  await message.reply(f'{balance} рублей')
+
+@dp.message_handler(commands=['categories'])
+async def categories(message: types.Message):
+  category_status = database.take_category_status()
+  await message.answer(category_status)
     
 
 @dp.message_handler()

@@ -25,18 +25,21 @@ def sql_create_table_category(con):
     )
   con.commit()
 
-def sql_insert_categories(con, values: tuple):
+def sql_insert_categories(con, values: list):
   cursorObj = con.cursor()
-  cursorObj.execute('INSERT INTO category(id, categoryTitle, worth) VALUES(?, ?, ?)', values)
+  for value in values:
+    cursorObj.execute('INSERT INTO category(id, categoryTitle, worth) VALUES(?, ?, ?)', value)
   con.commit()
 
 def init_database(con):
   if __name__ != '__main__':
     sql_create_table_category(con)
     sql_create_table_history(con)
-    categories = (
-      1, "Some Title", 1
-      )
+    categories = [(
+      1, "1_Some Title", 1
+      ),(
+      2, "2_Some Title", 0
+      )]
     try:
       sql_insert_categories(con, categories)
       return "Tables have been created"
