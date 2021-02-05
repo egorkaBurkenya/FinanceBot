@@ -37,7 +37,15 @@ async def balance(message: types.Message):
 async def categories(message: types.Message):
   category_status = database.take_category_status()
   await message.answer(category_status)
-    
+
+@dp.message_handler(commands=['cat_history'])
+async def cat_history(message: types.Message):
+  if len(message.text.split(' ')) < 2:
+    category_history = database.take_cat_history()
+    await message.answer(category_history)
+  else: 
+    category_history = database.take_cat_history(message.text.split(' ')[1])
+    await message.reply(category_history)
 
 @dp.message_handler()
 async def echo(message: types.Message):

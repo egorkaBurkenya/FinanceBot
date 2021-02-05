@@ -27,3 +27,16 @@ def take_category_status() -> str:
   cat_status = ''
   for i in categories: cat_status += f'{i[0]} - {i[1]}\n'
   return cat_status
+
+def take_cat_history(category: str = '') -> str:
+  cursorObj = con().cursor()
+  cursorObj.execute("SELECT c.categoryTitle, h.amount, h.amountTitle FROM history as h LEFT JOIN category as c ON c.id = h.categoryId ORDER BY c.categoryTitle")
+  categories = cursorObj.fetchall()
+  cat_history = ''
+  for i in categories: 
+    if category == '':
+      cat_history += f'{i[0]}: {i[1]}руб. - {i[2]}\n'
+    else: 
+      if category == i[0]:
+        cat_history += f'{i[0]}: {i[1]}руб. - {i[2]}\n'
+  return cat_history
