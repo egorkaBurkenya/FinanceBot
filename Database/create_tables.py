@@ -1,9 +1,12 @@
+import sqlite3
+from sqlite3 import Error
+
 def sql_create_table_history(con):
   cursorObj = con.cursor()
   cursorObj.execute(
     """CREATE TABLE IF NOT EXISTS history
     (
-      id integer PRIMARY KEY, 
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
       amount integer, 
       amountTitle text, 
       type integer, 
@@ -32,16 +35,20 @@ def sql_insert_categories(con, values: list):
   con.commit()
 
 def init_database(con):
-  if __name__ != '__main__':
+  if __name__ == '__main__':
     sql_create_table_category(con)
     sql_create_table_history(con)
     categories = [(
-      1, "1_Some Title", 1
+      1, "Такси", 1
       ),(
-      2, "2_Some Title", 0
+      2, "Еда", 0
       )]
     try:
       sql_insert_categories(con, categories)
       return "Tables have been created"
     except: 
       return "The categories have already been defined"
+
+init_database(
+  sqlite3.connect('./Database/mydatabase.db')
+)

@@ -3,6 +3,7 @@ from aiogram import Bot, Dispatcher, executor, types
 import json
 
 import modules.sqlite3_module as database
+from modules.clear_module import clear_list
 
 
 with open('./configs/config.json', 'r', encoding='utf-8') as fh:
@@ -49,9 +50,13 @@ async def cat_history(message: types.Message):
 
 @dp.message_handler()
 async def echo(message: types.Message):
-  # print(message.text.split(' ')[0])
-  if message.text.split(' ')[0] in database.take_category_title():   
-    await message.answer(message.text)
+  if ':' in message.text:
+    message_args = message.text.split(':')
+    if message_args[0] in database.take_category_title():   
+      amount = message_args[1].split(' ')
+      amount = clear_list(amount, '')
+      database.insert_amount(amount, message_args[0])
+      await message.answer('Добавленно !')
 
 if __name__ == '__main__':
   executor.start_polling(dp, skip_updates=True)

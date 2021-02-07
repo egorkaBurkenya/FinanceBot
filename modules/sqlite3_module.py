@@ -1,12 +1,13 @@
 import sqlite3
 from sqlite3 import Error
+from datetime import datetime
+from .collected_module import collect_the_pieces
 
 def con():
   try: 
     return sqlite3.connect('./Database/mydatabase.db')
   except Error:
     print(Error)
-
 
 def take_balance() -> int: 
   cursorObj = con().cursor()
@@ -50,4 +51,14 @@ def take_cat_history(category: str = '') -> str:
         cat_history += f'{i[0]}: {i[1]}руб. - {i[2]}\n'
   return cat_history
 
-
+def insert_amount(amount: list, category: str) -> bool:
+  add_datetime = str(datetime.now()).split('.')[0]
+  conection = con()
+  cursorObj = conection.cursor()
+  cursorObj.execute(f"SELECT id, categoryTitle FROM category")
+  categories_id = cursorObj.fetchall()
+  for cat in categories_id:
+    if cat[1] == category:
+      category_id =  cat[0]
+  cursorObj.execute(f"INSERT INTO history (amount, amountTitle, type, createdDate, categoryId) VALUES ({amount[0]}, '{collect_the_pieces(amount[1:-1])}', {1 if amount[-1] == '+' else 0 }, '{add_datetime}', {category_id})")
+  conection.commit()
