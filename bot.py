@@ -48,6 +48,12 @@ async def cat_history(message: types.Message):
     category_history = database.take_cat_history(message.text.split(' ')[1])
     await message.reply(category_history)
 
+@dp.message_handler(commands=['history'])
+async def history(message: types.Message):
+    history = database.take_history()
+    try: await message.answer(history)
+    except: await message.answer('Пусто')
+
 @dp.message_handler()
 async def echo(message: types.Message):
   if ':' in message.text:
@@ -57,6 +63,10 @@ async def echo(message: types.Message):
       amount = clear_list(amount, '')
       database.insert_amount(amount, message_args[0])
       await message.answer('Добавленно !')
+  if '/del_' in message.text:
+    amount_id = message.text.split('_')[1]
+    database.delete_amount(amount_id)
+    await message.answer('Удаленно')
 
 if __name__ == '__main__':
   executor.start_polling(dp, skip_updates=True)

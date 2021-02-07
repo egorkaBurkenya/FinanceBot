@@ -62,3 +62,20 @@ def insert_amount(amount: list, category: str) -> bool:
       category_id =  cat[0]
   cursorObj.execute(f"INSERT INTO history (amount, amountTitle, type, createdDate, categoryId) VALUES ({amount[0]}, '{collect_the_pieces(amount[1:-1])}', {1 if amount[-1] == '+' else 0 }, '{add_datetime}', {category_id})")
   conection.commit()
+
+def take_history() -> str:
+  cursorObj = con().cursor()
+  cursorObj.execute("SELECT c.categoryTitle, h.type, h.amount, h.amountTitle, h.id FROM history as h LEFT JOIN category as c ON c.id = h.categoryId ORDER BY c.categoryTitle")
+  history = cursorObj.fetchall()
+  amounts_history = ''
+  number = 0
+  for one_amount in history:
+    number += 1
+    amounts_history += f"{one_amount[0]} - {'Потратил' if one_amount[1] == 0 else 'Получил'} {one_amount[2]} руб. {one_amount[3]} /del_{one_amount[4]}\n"  
+  return amounts_history
+
+def delete_amount(amount_id: str):
+  conection = con()
+  cursorObj = conection.cursor()
+  cursorObj.execute(f"DELETE FROM history WHERE id = {int(amount_id)}")
+  conection.commit()
